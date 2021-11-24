@@ -1,0 +1,29 @@
+Initialize:
+   ADDI X7, XZR, #1000 
+   LSL X7, X7, #2 //set X7 to address 4000
+   
+   ADDI X1, XZR, #512
+   LSL X1, X1, #22
+   SUBI X1, X1, #1 // #2147483647
+   ADD X2, X1, XZR
+   LSL X2, X2, #1
+   ADDI X2, X2, #1 // #4294967295
+   STUR X1, [X7, #0]
+   STUR X2, [X7, #8]
+   B Mult
+   
+Sum:
+   ADD X4, X4, X1 // sum in X4 temp
+Shift:
+   LSL X1, X1, #1
+   LSR X2, X2, #1
+Mult:
+   ANDI X3, X2, #1 // AND to test LSB
+   SUBIS XZR, X3, #1
+   B.EQ Sum
+   SUBS XZR, X2, XZR
+   B.EQ Exit
+   B Shift
+
+Exit:
+   STUR X4, [X7, #24] // store final sum to memory

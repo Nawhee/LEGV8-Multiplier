@@ -1,0 +1,22 @@
+Initialize:
+   ADDI X7, XZR, #1000 
+   LSL X7, X7, #2 //set X7 to address 4000
+   
+   ADDI X1, XZR, #512
+   LSL X1, X1, #23
+   SUBI X1, X1, #1 // #4294967295
+   STUR X1, [X7, #0]
+   B Pos
+
+Shift:
+   LSR X1, X1, #1
+   LSR X2, X2, #1
+   ADDI X4, X4, #1
+   
+Pos:
+   SUBS XZR, X1, XZR
+   B.EQ Exit
+   B Shift
+
+Exit:
+   STUR X4, [X7, #8] //store number of bits in memory
